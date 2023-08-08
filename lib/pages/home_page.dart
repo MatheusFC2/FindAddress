@@ -35,7 +35,10 @@ class _HomePageState extends State<HomePage> {
                       return null;
                     }
                   ),
-                  ElevatedButton(onPressed: () {}, child: const Text('Buscar CEP'),
+                  ElevatedButton(onPressed: () {
+                    final valid = formKey.currentState?.validate() ?? false;
+                  }, 
+                  child: const Text('Buscar CEP'),
                   ),
                   Text('Logradouro completo cep')
                 ],
