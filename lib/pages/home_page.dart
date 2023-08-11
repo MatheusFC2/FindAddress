@@ -17,6 +17,13 @@ class _HomePageState extends State<HomePage> {
   EnderecoModel? enderecoModel; 
 
   final formKey = GlobalKey<FormState>();
+  final cepEC = TextEditingController();
+
+  @override
+  void dispose() {
+    cepEC.dispose();
+    super.dispose();
+  }
 
    @override
    Widget build(BuildContext context) {
@@ -28,6 +35,7 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: [
                   TextFormField(
+                    controller: cepEC,
                     validator: (value) {
                       if(value == null || value.isEmpty) {
                         return 'CEP Obrigatorio';
@@ -35,12 +43,18 @@ class _HomePageState extends State<HomePage> {
                       return null;
                     }
                   ),
-                  ElevatedButton(onPressed: () {
+                  ElevatedButton(onPressed: () async {
                     final valid = formKey.currentState?.validate() ?? false;
+                    if(valid) {
+                      final endereco = await cepRepository.getCep(cepEC.text);
+                      setState(() {
+                        enderecoModel = endereco;                         
+                      });
+                    }
                   }, 
                   child: const Text('Buscar CEP'),
                   ),
-                  Text('Logradouro completo cep')
+                  Text('${enderecoModel?.logradouro} ${enderecoModel?.complemento} ${enderecoModel?.cep}')
                 ],
               ) 
             ),
